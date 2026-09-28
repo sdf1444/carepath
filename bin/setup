@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+bundle install
+bin/rails db:prepare
+bin/rails db:seed
+printf '\nCarePath ready. Run: bin/rails server\n'

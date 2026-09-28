@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+  redis:
+    image: redis:7-alpine
+  web:
+    build: .
+    command: sh -c "bin/rails db:prepare && bin/rails server -b 0.0.0.0"
+    ports: ["3000:3000"]
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379/0
+    depends_on: [db, redis]
+  worker:
+    build: .
+    command: bundle exec sidekiq
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379/0
+    depends_on: [db, redis]
+volumes:
+  postgres_data:

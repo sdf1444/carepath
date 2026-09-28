@@ -1,0 +1,7 @@
+/.bundle
+/log/*
+/tmp/*
+/storage/*
+.env
+/vendor/bundle
+.DS_Store
